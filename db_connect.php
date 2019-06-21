@@ -1,10 +1,12 @@
 <?php
 
 class DB_CONNECT{
-	
+
+    public $conection;
+
 	//constructor
 	function __construct(){
-		$this->connect();
+		$this->conection = $this->connect();
 	}
 	
 	//destructor
@@ -15,13 +17,12 @@ class DB_CONNECT{
 	//connecta
 	function connect(){
 		require_once __DIR__ .'/db_config.php';
-		$con = mysql_connect(DB_SERV, DB_USER, DB_PASS) or die(mysql_error());
-		$db = mysql_select_db(DB_DATA) or die(mysql_error()) or die(mysql_error());
-		return $con;
+        $mysqli = new mysqli(DB_SERV, DB_USER, DB_PASS, DB_DATA);
+		return $mysqli;
 	}
 	
 	function close(){
-		mysql_close();
+		$this->conection->close();
 	}
 	
 }

@@ -1,0 +1,26 @@
+DatagramSocket socket_UDP = new DatagramSocket();
+        socket_UDP.connect(socket.getInetAddress(), socket.getPort()); 
+        byte[] ping = new byte[1];
+        DatagramPacket sendPacket = new DatagramPacket(ping, 1, socket.getInetAddress(), socket.getPort());
+        DatagramPacket receivePacket = new DatagramPacket(ping,	1);
+        long time = 0;
+        int rep = 10;
+        
+        BufferedInputStream bfI = new BufferedInputStream(socket.getInputStream());
+        BufferedOutputStream bfO = new BufferedOutputStream(socket.getOutputStream());
+        bfI.read(ping);
+        bfO.write(ping); bfO.flush();
+        socket_UDP.setSoTimeout(1000);
+		
+        for(int i=0; i<rep; i++) {
+        	try {
+        		long startTime = System.currentTimeMillis();
+        		socket_UDP.send(sendPacket);
+        		socket_UDP.receive(receivePacket);
+            	time += System.currentTimeMillis() - startTime;
+        	}catch(Exception e1) {System.out.println(e1.getMessage() + " - Recebidos: " + i);; i--;}
+        }
+        socket_UDP.disconnect();
+        socket_UDP.close();
+        return time/rep;
+    }
